@@ -32,37 +32,43 @@ function empezarJuego(){
 
 class Juego{
   constructor(){
-    this.inicializar(3);
-    this.jugar();
+    this.inicializar(3); //inicaliza las variables
+    this.jugar(); //loop donde el usuario juega
   }
 
-  inicializar(varlor_inicial){
+  inicializar(valor_inicial){
     this.celeste=new Boton($btnCeleste);
     this.violeta=new Boton($btnVioleta);
     this.naranja=new Boton($btnNaranja);
     this.verde=new Boton($btnVerde);
-    this.perdio=0;
-    this.contador=varlor_inicial;
+    this.perdio=0; //flag que determina si el jugador perdio o no
+    this.contador=valor_inicial; //el numero de suceciones con el que comienza la partida 1 (se autoincrementa una unidad por cada partida que pasa)
   }
 
-  jugar(){
+  async jugar(){
     var j=0;
 
     // while(this.perdio==0){
-    // while(j<5){
-      this.secuencia=this.generar_secuencia();
-      this.iluminar();
-      this.contador++;
-      console.log(this.secuencia);
-      j++;
+      while(j<5){
+        this.secuencia=this.generar_secuencia(); //genera la secuencia de numeros que indica que boton se va a iluminar
+        console.log(this.secuencia);
+        await this.iluminar(); //ilumina la secuencia de numeros. Relaciona this.secuencia con su respectivo boton
+        this.contador++;
+        j++;
+      }
     // }
   }
 
   generar_secuencia(){
     var secuencia=[];
     var i;
+    var aux;
     for (i = 0; i<this.contador ; i++) {
-      secuencia.push(Math.ceil(Math.random()*4));
+      aux=(Math.ceil(Math.random()*4)); //Math.random genera un numero entre [0,1). Math.ceil redondea hacia el entero mayor. El resultado es un numero comprendido entre [0,4]
+      if(aux==0){
+        aux=1; //en caso que Math.random=0, aux=0. No se desea eso
+      }
+      secuencia.push(aux);
     }
     return secuencia;
   }
@@ -71,7 +77,7 @@ class Juego{
     var w;
     for (w = 0; w<this.contador ; w++) {
       await sleep(1000);
-      console.log("entre");
+      // console.log("entre");
       if(this.secuencia[w]==1){
         this.celeste.iluminar();
       } else if(this.secuencia[w]==2){
